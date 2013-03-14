@@ -2,7 +2,6 @@ duckhunt
 ========
 
 An HTML5 Duck Hunt clone made with canvas and JS
-
 This version is still in development.
 
 What works :
@@ -23,3 +22,5 @@ What is still to be done :
 - Avoid to let the ducks fly forever (implement a timer)
 - Pause mode (I still don't know how to do it...)
 - Game B / Game C
+
+Oh ! And you can try a demo <a href="http://adrienmas.com/labs/duckhunt/">here</a>.
