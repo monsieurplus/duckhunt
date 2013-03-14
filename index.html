@@ -1,0 +1,70 @@
+<html>
+	<head>
+		<title>Duck Hunt</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<script type="text/javascript" src="js/Base.js"></script>
+		<script type="text/javascript" src="js/LayerManager.js"></script>
+		<script type="text/javascript" src="js/Game.js"></script>
+		<script type="text/javascript" src="js/Rectangle.js"></script>
+		<script type="text/javascript" src="js/BipMap.js"></script>
+		<script type="text/javascript" src="js/Text.js"></script>
+		<script type="text/javascript" src="js/MainScreen.js"></script>
+		<script type="text/javascript" src="js/MainScreenTitle.js"></script>
+		<script type="text/javascript" src="js/SwampScreen.js"></script>
+		<script type="text/javascript" src="js/Hud.js"></script>
+		<script type="text/javascript" src="js/HudBackground.js"></script>
+		<script type="text/javascript" src="js/Modal.js"></script>
+		<script type="text/javascript" src="js/ModalBackground.js"></script>
+		<script type="text/javascript" src="js/LevelBackground.js"></script>
+		<script type="text/javascript" src="js/LevelForeground.js"></script>
+		<script type="text/javascript" src="js/Dog.js"></script>
+		<script type="text/javascript" src="js/Duck.js"></script>
+		<script type="text/javascript" src="js/Flash.js"></script>
+		<script type="text/javascript" src="js/Score.js"></script>
+		
+		<script type="text/javascript">
+			document.addEventListener('DOMContentLoaded', function() {
+				game = new Game();
+				game.init();
+			});
+		</script>
+		<style type="text/css">
+			body, html { margin:0; padding:0 }
+			canvas {
+				display:block;
+				position:absolute;
+				top:0;
+				left:0;
+				-webkit-tap-highlight-color: rgba(0,0,0,0);
+				image-rendering: -moz-crisp-edges;
+				image-rendering: -o-crisp-edges;
+				image-rendering: -webkit-optimize-contrast;
+				-ms-interpolation-mode: nearest-neighbor;
+			}
+			#fps-counter {
+				position:absolute;
+				top:224px;
+				left:0;
+				font-family:sans-serif;
+				font-size:10px;
+				color:white;
+				background:black;
+				z-index:1;
+			}
+			#hit {
+				position:absolute;
+				top:224px;
+				left:100px;
+				font-family:sans-serif;
+				font-size:10px;
+				color:white;
+				background:black;
+				z-index:1;
+			}
+		</style>
+	</head>
+	<body>
+		<span id="fps-counter"></span>
+		<span id="hit"></span>
+	</body>
+</html>
