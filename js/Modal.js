@@ -8,6 +8,7 @@ Modal.prototype.show = function() { this.visible = true; };
 
 Modal.prototype.type = false; // values : "game over", "fly away", "round", "perfect", "pause"
 Modal.prototype.round = 0;
+Modal.prototype.perfect = 10000;
 
 
 Modal.prototype.displayDuration = false;
@@ -65,7 +66,7 @@ Modal.prototype.drawPerfect = function() {
 	points.set({
 		x : 113,
 		y : 64,
-		text : '10000'
+		text : this.perfect+''
 	});
 	
 	bg.draw();

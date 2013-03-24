@@ -17,48 +17,70 @@ SwampScreen.prototype.values = {
 	round:1, // Round number
 	duck:0, // Duck index from 0 to 9
 	bullet:3, // Number of bullets left
-	hit:[0,0,0,0,0,0,0,0,0,0], // Records if ducks are shot or not
 	goal:6, // Number of ducks that have to be shot to win the round
+	hit:[0,0,0,0,0,0,0,0,0,0], // Records if ducks are shot or not
 	score:0, // Player's score
-	armed : false, // Boolean that controls if the player can fire his gun
-	duckvalue:{
-		black : 500,
-		blue : 1000,
-		red : 1500
-	}
+	armed : false, // Boolean that controls if the player can fire his gun,
+	timer : false
 };
 
 // Levels configuration
 (function() {
-	// TODO increase speed until level 20
-	// TODO increase goal until level 20
-	/*
-	1 through 10 	6 out of 10
-	11 through 12 	7 out of 10
-	13 through 14 	8 out of 10
-	15 through 19 	9 out of 10
-	20 through 99 	10 out of 10
-	*/
-	// TODO increase duck values and perfect bonus
-	/*
-	Round 	1-5 	6-10 	11-15 	16-20 	21-99
-	Black	500 	800 	1000 	1000 	1000
-	Blue 	1000 	1500 	2000 	2000 	2000
-	Red 	1500 	2400 	3000 	3000 	3000
-	Bonus 	10000 	10000 	15000 	20000 	30000
-	*/
-	
 	var config = [];
-	for (var i=0; i<100; i++) {
-		var computed = 8-0.1*i;
-		if (computed < 1) {
-			config.push(1);
+	for (var i=1; i < 100; i++) {
+		var level = { 'speed' : 0, 'goal' : 0, 'points' : {}};
+		
+		// duck speed (the less the value is, the faster the duck fly)
+		level.speed = (i<20 ? 7-(0.25*1) : 2);
+		
+		/* Goals
+		1 through 10 	6 out of 10
+		11 through 12 	7 out of 10
+		13 through 14 	8 out of 10
+		15 through 19 	9 out of 10
+		20 through 99 	10 out of 10
+		*/
+		if (i <= 10) {
+			level.goal = 6;
+		}
+		else if (i <= 12) {
+			level.goal = 7;
+		}
+		else if (i <= 14) {
+			level.goal = 8;
+		}
+		else if (i <= 19) {
+			level.goal = 9;
 		}
 		else {
-			config.push(computed);
+			level.goal = 10;
 		}
+		
+		/* Points
+		Round 	1-5 	6-10 	11-15 	16-20 	21-99
+		Black	500 	800 	1000 	1000 	1000
+		Blue 	1000 	1500 	2000 	2000 	2000
+		Red 	1500 	2400 	3000 	3000 	3000
+		Bonus 	10000 	10000 	15000 	20000 	30000
+		*/
+		if (i <= 5) {
+			level.points = { 'black' : 500, 'blue' : 1000, 'red' : 1500, 'perfect' : 10000 };
+		}
+		else if (i <= 10) {
+			level.points = { 'black' : 800, 'blue' : 1500, 'red' : 2400, 'perfect' : 10000 };
+		}
+		else if (i <= 15) {
+			level.points = { 'black' : 1000, 'blue' : 2000, 'red' : 3000, 'perfect' : 15000 };
+		}
+		else if (i <= 20) {
+			level.points = { 'black' : 1000, 'blue' : 2000, 'red' : 3000, 'perfect' : 20000 };
+		}
+		else {
+			level.points = { 'black' : 1000, 'blue' : 2000, 'red' : 3000, 'perfect' : 30000 };
+		}
+		
+		config[i] = level;
 	}
-	
 	SwampScreen.prototype.config = config;
 })();
 
@@ -142,11 +164,14 @@ SwampScreen.prototype.init = function() {
 		
 		// If the duck is hit
 		if (hit === true) {
+			// Remove duck fly away timer
+			clearTimeout(_this.values.timer);
+			
 			// Disabling gun
 			_this.values.armed = false;
 			
 			// Adding points from hitting the duck
-			var points = _this.values.duckvalue[_this.gui.duck1.color];
+			var points = _this.config[_this.values.round].points[_this.gui.duck1.color];
 			
 			// Display the number of points scored
 			_this.gui.score.score = points;
@@ -164,31 +189,7 @@ SwampScreen.prototype.init = function() {
 		}
 		// If the duck is not hit and the player is out of ammos
 		else if (_this.values.bullet === 0) {
-			var sunsetDuration = 2000; // Duration of the sunset (time when the duck flies away)
-			
-			// The duck flies away
-			_this.gui.duck1.flyAway();
-			
-			// Modal window for FLY AWAY
-			_this.gui.sky.color = '#FFCCC5';
-			_this.gui.modal.type = 'fly away';
-			_this.gui.modal.display(sunsetDuration);
-			
-			// Laughing dog animation
-			setTimeout(function() {
-				_this.gui.sky.color = '#64B0FF';
-				_this.gui.dog.queueAnimation({ name : 'laugh', callback : function() {
-					// Launch next duck of next round
-					if (_this.values.duck < 10) {
-						_this.values.duck++;
-						_this.start();
-					}
-					else {
-						// Launch round ending
-						_this.endRound();
-					}
-				}});
-			}, sunsetDuration);
+			_this.stop();
 		}
 		
 		_this.changeHud();
@@ -202,11 +203,14 @@ SwampScreen.prototype.start = function() {
 	// Init values
 	var _this = this;
 	this.values.bullet = 3; // Reset ammos
+	this.values.goal = this.config[this.values.round].goal; // Load goal of current level
 	this.gui.sky.color = '#64B0FF'; // Reset the sky's color
 	this.gui.duck1.color = ['black', 'blue', 'red'][Math.floor(Math.random()*3)];
 	
+	// Clean the screen
 	game.layerManager.removeAll();
 	
+	// Add every element to the screen
 	game.layerManager.addToTop('swamp.sky', this.gui.sky);
 	game.layerManager.addToTop('swamp.floor', this.gui.floor);
 	game.layerManager.addToTop('swamp.duck', this.gui.duck1);
@@ -230,15 +234,67 @@ SwampScreen.prototype.start = function() {
 		this.gui.dog.queueAnimation({ name : 'walk' });
 		this.gui.dog.queueAnimation({ name : 'jump', callback : function() { game.layerManager.lower('swamp.dog'); } });
 		this.gui.dog.queueAnimation({ name : 'fall', callback : function() {
-			_this.gui.duck1.takeOff(_this.config[_this.values.round-1]);
+			_this.gui.duck1.takeOff(_this.config[_this.values.round].speed);
 			_this.values.armed = true;
+			
+			// Start end of flight timer
+			_this.values.timer = setTimeout(function() {
+				_this.stop();
+			}, 5000);
 		} });
 	}
 	else {
 		game.layerManager.lower('swamp.dog');
-		this.gui.duck1.takeOff(this.config[this.values.round-1]);
+		this.gui.duck1.takeOff(this.config[this.values.round].speed);
 		this.values.armed = true;
+		
+		// Start end of flight timer
+		_this.values.timer = setTimeout(function() {
+			_this.stop();
+		}, 5000);
 	}
+};
+
+/**
+ * Stops a duck's fly (make it fly away)
+ */
+SwampScreen.prototype.stop = function() {
+	var _this = this;
+	
+	var sunsetDuration = 2000; // Duration of the sunset (time when the duck flies away)
+	
+	if (_this.gui.duck1.action !== 'fly') {
+		return false;
+	}
+	
+	// The duck flies away
+	this.gui.duck1.flyAway();
+	
+	// Modal window for FLY AWAY
+	this.gui.sky.color = '#FFCCC5';
+	this.gui.modal.type = 'fly away';
+	this.gui.modal.display(sunsetDuration);
+	
+	// Laughing dog animation
+	setTimeout(function() {
+		if (_this.gui.duck1.action !== 'leave') {
+			return false;
+		}
+
+		_this.values.armed = false;
+		_this.gui.sky.color = '#64B0FF';
+		_this.gui.dog.queueAnimation({ name : 'laugh', callback : function() {
+			// Launch next duck of next round
+			if (_this.values.duck < 10) {
+				_this.values.duck++;
+				_this.start();
+			}
+			else {
+				// Launch round ending
+				_this.endRound();
+			}
+		}});
+	}, sunsetDuration);
 };
 
 /**
@@ -321,8 +377,9 @@ SwampScreen.prototype.endRound = function(callback) {
 		if (killed === 10) {
 			setTimeout(function() {
 				_this.gui.modal.type = 'perfect';
+				_this.gui.modal.perfect = _this.config[_this.values.round].points.perfect;
 				_this.gui.modal.display(3000);
-				_this.values.score += 10000;
+				_this.values.score += _this.config[_this.values.round].points.perfect;
 				_this.changeHud();
 			}, timer);
 			timer += 3000;
@@ -330,7 +387,7 @@ SwampScreen.prototype.endRound = function(callback) {
 		
 		// Launches next round
 		setTimeout(function() {
-			_this.values.round++
+			_this.values.round++;
 			_this.values.duck = 0;
 			_this.values.hit = [0,0,0,0,0,0,0,0,0,0];
 			_this.start();
