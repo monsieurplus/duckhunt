@@ -22,6 +22,6 @@ What still has to be done
 * Sounds (probably with soundJS)
 * Pause mode (I still don't know how to do it...)
 * Game B / Game C
-* use WebGL-2D : https://github.com/corbanbrook/webgl-2d
+* try WebGL-2D : https://github.com/corbanbrook/webgl-2d
 
 Oh ! And you can try a demo [here](http://adrienmas.com/labs/duckhunt/ "HTML5 Duck Hunt")
