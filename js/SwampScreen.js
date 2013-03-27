@@ -31,7 +31,7 @@ SwampScreen.prototype.values = {
 		var level = { 'speed' : 0, 'goal' : 0, 'points' : {}};
 		
 		// duck speed (the less the value is, the faster the duck fly)
-		level.speed = (i<20 ? 7-(0.25*1) : 2);
+		level.speed = (i<20 ? 7-(0.25*i) : 2);
 		
 		/* Goals
 		1 through 10 	6 out of 10
