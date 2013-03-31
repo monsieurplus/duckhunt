@@ -32,7 +32,7 @@ Duck.prototype.startX = [50,130,200]; // Points from which the ducks can take of
 	var movement = [[0,1],[-1,2],[-1,1],[-2,1],[-1,0],[-2,-1],[-1,-1],[-1,-2],[0,-1],[1,-2],[1,-1],[2,-1],[1,0],[2,1],[1,1],[1,2]];
 	Duck.prototype.movement = movement;
 	
-	var movementGrouped = [[1,2,3],[5,6,7],[9,10,11],[13,14,15]];
+	var movementGrouped = [[1,3],[5,7],[9,11],[13,14,15]];
 	var movementSimilar = [];
 	for (var i=0; i<movementGrouped.length; i++) {
 		for (var j=0; j<movementGrouped[i].length; j++) {
@@ -157,7 +157,7 @@ Duck.prototype.takeOff = function(speed) {
 	this.y = this.area.maxY-this.height;
 	
 	// Choose direction
-	var movementTakeOff = [5,6,7,9,10,11];
+	var movementTakeOff = [5,7,9,11];
 	this.currentMovement = movementTakeOff[Math.floor(Math.random()*movementTakeOff.length)];
 	this.currentMovementStart = (new Date()).getTime();
 	this.currentMovementBeggining = (new Date()).getTime();
@@ -195,7 +195,7 @@ Duck.prototype.die = function() {
 
 /**
  * Checks if the duck position is out of the frame
- * @returns An object with "top","bottom","left" & "right" properties to know where it got out or false if the duck is in the frame
+ * @returns false if there is no collision, or the rebound direction if there is a collision 
  */
 Duck.prototype.checkCollision = function() {
 	var rebound = 0;
@@ -252,9 +252,8 @@ Duck.prototype.move = function() {
 		return true;
 	}
 	
-	// Compute duck position
-	var nbCycle = Math.floor((now - this.currentMovementStart)/(this.currentSpeed*this.movementDistance[this.currentMovement])) // Compute how many movement cycles have passed
-	
+	// Compute number of duck move to do since last movement
+	var nbCycle = Math.floor((now - this.currentMovementStart)/(this.currentSpeed*this.movementDistance[this.currentMovement])); // Compute how many movement cycles have passed
 	if (nbCycle === 0) {
 		return true;
 	}

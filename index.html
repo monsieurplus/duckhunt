@@ -26,46 +26,58 @@
 		<script type="text/javascript">
 			document.addEventListener('DOMContentLoaded', function() {
 				game = new Game();
-				game.init();
+				game.init({
+					'canvasId' : 'game-canvas',
+					'fpsId' : 'fps-counter'
+				});
+
+				var tools = document.getElementById('tools');
+				if (game.checkFullScreen() === true) {
+					var buttonFullScreen = document.createElement('button');
+					buttonFullScreen.innerHTML = 'FullScreen';
+					buttonFullScreen.addEventListener('click', function() { game.goFullScreen(); });
+					tools.appendChild(buttonFullScreen);
+				}
 			});
 		</script>
 		<style type="text/css">
-			body, html { margin:0; padding:0 }
+			body, html { margin:0; padding:0; background:black; }
 			canvas {
 				display:block;
 				position:absolute;
 				top:0;
 				left:0;
+				
+				height:100%;
+				
+				/* avoid canvas orange|blue highlight when clicked in Android */
 				-webkit-tap-highlight-color: rgba(0,0,0,0);
+				
+				/* improve canvas crispiness when zoomed */
 				image-rendering: -moz-crisp-edges;
 				image-rendering: -o-crisp-edges;
 				image-rendering: -webkit-optimize-contrast;
 				-ms-interpolation-mode: nearest-neighbor;
 			}
-			#fps-counter {
+			#tools {
 				position:absolute;
-				top:224px;
-				left:0;
-				font-family:sans-serif;
-				font-size:10px;
-				color:white;
-				background:black;
-				z-index:1;
+				top:0;
+				right:0;
+				text-align:right;
 			}
-			#hit {
-				position:absolute;
-				top:224px;
-				left:100px;
+			#fps-counter {
 				font-family:sans-serif;
 				font-size:10px;
 				color:white;
 				background:black;
-				z-index:1;
 			}
 		</style>
 	</head>
 	<body>
-		<span id="fps-counter"></span>
-		<span id="hit"></span>
+		<canvas id="game-canvas"></canvas>
+		<div id="tools">
+			<span id="fps-counter"></span>
+		</div>
+		
 	</body>
 </html>
