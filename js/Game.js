@@ -117,18 +117,15 @@ Game.prototype.goFullScreen = function() {
 	}
 	
 	if(this.canvas.requestFullScreen) {
-		console.info('standard');
 		this.canvas.requestFullScreen();
 	}
 	else if (this.canvas.webkitRequestFullScreen) {
-		console.info('webkit');
 		this.canvas.webkitRequestFullScreen();
 	}
 	else if (this.canvas.mozRequestFullScreen) {
-		console.info('moz');
 		this.canvas.mozRequestFullScreen();
 	}
 	else {
-		console.info('uh oh...');
+		return false;
 	}
 };
