@@ -14,12 +14,9 @@ What works
 
 What still has to be done
 -------------------------
+* Group all classes in a global object (
 * When the dog show the duck he picked up, it should not always be centered on the screen (it should be placed next where the duck felt)
-* Fullscreen mode (it currently runs in the original NES resolution 256x224) which is less than a poststamp on retina display
 * Add fake CRT effect like the one made by Zachary Johnson : http://www.zachstronaut.com/posts/2012/08/17/webgl-fake-crt-html5.html (should be optionnal)
-* Touch events for touch devices (phones, tablets...)
-* Make it work with wii pointer to be as close as possible from the original game
-* Sounds (probably with soundJS)
 * Pause mode (I still don't know how to do it...)
 * Game B / Game C
 * try WebGL-2D : https://github.com/corbanbrook/webgl-2d
