@@ -5,12 +5,14 @@ Game.prototype.canvas = false;
 Game.prototype.context = false;
 Game.prototype.layerManager = false;
 Game.prototype.sprites = false;
+Game.prototype.sound = false;
 
 /**
  * Launch the game
  * @param Object params Several parameters for game initialization
  *    - canvasId : id of the target canvas (needed)
  *    - fpsId : id of the element where fps are displayed
+ *    - sound : if true, sounds will be played during the game
  */
 Game.prototype.init = function(params) {
 	// Game config
@@ -46,13 +48,23 @@ Game.prototype.init = function(params) {
 	this.sprites = new Image();
 	this.sprites.src = 'images/sprites.png';
 	
+	// Load sounds
+	this.sound = new Sound();
+	if (!!params.sound) {
+		this.sound.init();
+	}
+	
 	// Create LayerManager
 	this.layerManager = new LayerManager();
 	
 	// Game loading
 	var main = new MainScreen();
 	main.addEventListener('choice', function(e) {
+		// Remove main screen
 		main.remove();
+		
+		// Stop all sounds (mainly main scren music)
+		game.sound.stopAll();
 		
 		if (e.choice === 'A') {
 			var swamp = new SwampScreen();

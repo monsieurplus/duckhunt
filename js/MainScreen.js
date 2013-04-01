@@ -106,6 +106,9 @@ MainScreen.prototype.insert = function() {
 		},250);
 	};
 	game.addEventListener('click', clickHandler);
+	
+	// Play main screen music
+	game.sound.play('start_game');
 };
 
 MainScreen.prototype.remove = function() {

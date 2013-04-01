@@ -22,13 +22,15 @@
 		<script type="text/javascript" src="js/Duck.js"></script>
 		<script type="text/javascript" src="js/Flash.js"></script>
 		<script type="text/javascript" src="js/Score.js"></script>
+		<script type="text/javascript" src="js/Sound.js"></script>
 		
 		<script type="text/javascript">
 			document.addEventListener('DOMContentLoaded', function() {
 				game = new Game();
 				game.init({
 					'canvasId' : 'game-canvas',
-					'fpsId' : 'fps-counter'
+					'fpsId' : 'fps-counter',
+					'sound' : true
 				});
 
 				var tools = document.getElementById('tools');

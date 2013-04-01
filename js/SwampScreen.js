@@ -231,9 +231,16 @@ SwampScreen.prototype.start = function() {
 		this.gui.modal.display(3000);
 		
 		// Dog animation to begin a round
-		this.gui.dog.queueAnimation({ name : 'walk' });
-		this.gui.dog.queueAnimation({ name : 'jump', callback : function() { game.layerManager.lower('swamp.dog'); } });
-		this.gui.dog.queueAnimation({ name : 'fall', callback : function() {
+		this.gui.dog.queueAnimation({ 'name' : 'walk' });
+		this.gui.dog.queueAnimation({ 'name' : 'jump', 'callback' : function() {
+			// Barking sound
+			game.sound.play('bark', 2);
+			
+			// Lower the dog layer for it to be behind the grass
+			game.layerManager.lower('swamp.dog');
+		} });
+		
+		this.gui.dog.queueAnimation({ 'name' : 'fall', 'callback' : function() {
 			_this.gui.duck1.takeOff(_this.config[_this.values.round].speed);
 			_this.values.armed = true;
 			
@@ -242,6 +249,9 @@ SwampScreen.prototype.start = function() {
 				_this.stop();
 			}, 5000);
 		} });
+		
+		// Play start round music
+		game.sound.play('start_round');
 	}
 	else {
 		game.layerManager.lower('swamp.dog');
