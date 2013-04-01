@@ -177,7 +177,6 @@ Duck.prototype.flyAway = function() {
 	this.currentMovement = movementLeave[Math.floor(Math.random()*movementLeave.length)];
 	this.currentMovementStart = (new Date()).getTime();
 	this.currentMovementBeggining = (new Date()).getTime();
-	this.currentSpeed = 8;
 };
 
 /**
