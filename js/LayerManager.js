@@ -144,7 +144,8 @@ LayerManager.prototype.remove = function(name) {
 
 LayerManager.prototype.removeAll = function() {
 	// Remove all layers
-	this.layers.splice(0, this.layers.length);
+	//this.layers.splice(0, this.layers.length);
+	this.layers = [];
 	
 	// Empty the index
 	for (var j in this.names) {
@@ -207,62 +208,6 @@ LayerManager.prototype.intervertByLevel = function(level1, level2) {
 		}
 	}
 };
-
-/*LayerManager.prototype.changeLevel = function(name, level) {
-	console.info('LayerManager.changeLevel('+name+','+level+')');
-	console.debug(this.names);
-	console.debug(this.layers[3]);
-	// Check layer's name
-	if (this.names[name] === undefined) {
-		return false;
-	}
-	
-	// Keeping the old layer's informations
-	var oldLevel = this.names[name];
-	var layer = this.layers[oldLevel];
-	
-	// If there is no move to make
-	if (oldLevel === level) {
-		return true;
-	}
-	// If layer must be moved up
-	else if (oldLevel > level) {
-		console.debug('up');
-		for (var i=oldLevel; i>level; i--) {
-			this.layers[i] = this.layers[i-1];
-		}
-		this.layers[level] = layer;
-		
-		// Update index
-		for (var j in this.names) {
-			if (this.names.hasOwnProperty(j)) {
-				if (this.names[j] > level && this.names[j] <= oldLevel) {
-					this.names[j]--;
-				}
-			}
-		}
-	}
-	// If layer must be moved down
-	else {
-		console.debug('down');
-		for (var i=level; i>oldLevel; i--) {
-			console.debug('prout'+i);
-			this.layers[i+1] = this.layers[i];
-		}
-		this.layers[level] = layer;
-		
-		// Update index
-		for (var j in this.names) {
-			if (this.names.hasOwnProperty(j)) {
-				if (this.names[j] >= level && this.names[j] < oldLevel) {
-					this.names[j]++;
-				}
-			}
-		}
-	}
-	console.debug(this.names);
-	console.debug(this.layers[3]);
-};*/
 
 LayerManager.prototype.raise = function(name) {
 	// Check layer's name
@@ -381,6 +326,10 @@ LayerManager.prototype.drawLayer = function(name) {
 };
 
 LayerManager.prototype.draw = function() {
+	if (this.layers.length === 0) {
+		return false;
+	}
+	
 	// Run the layers for bottom to top and draw them
 	for (var i=this.layers.length-1; i >= 0; i--) {
 		this.layers[i].draw();

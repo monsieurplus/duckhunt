@@ -7,7 +7,6 @@ Sound.prototype.files = ['bark', 'blast', 'drop', 'duck', 'end_duck_round', 'hig
 // Private objects
 Sound.prototype.elements = {}; // Contains every <audio> tags references
 Sound.prototype.repetitions = {}; // For each sound, register how many time it has to be replayed
-Sound.prototype.loaded = {}; // For each, register if it's loaded and ready to play
 Sound.prototype.muted = false;
 
 /**
@@ -36,11 +35,6 @@ Sound.prototype.init = function() {
 			_this.play(name);
 		};
 	};
-	var loadingHandler = function(name) {
-		return function() {
-			_this.loaded[name] = true;
-		};
-	};
 	
 	var container = document.createElement('div');
 	
@@ -57,10 +51,6 @@ Sound.prototype.init = function() {
 		
 		// Add the repeatHandler
 		audio.addEventListener('ended', repeatHandler(this.files[i]));
-		
-		// Add the loadingHandler
-		this.loaded[this.files[i]] = false;
-		audio.addEventListener('canPlay', loadingHandler(this.files[i]));
 		
 		// Add the <audio> reference to the object
 		this.elements[this.files[i]] = audio;
@@ -84,7 +74,6 @@ Sound.prototype.init = function() {
  *  - true means it will repeat forever (until stopped with the "stop" method)
  */
 Sound.prototype.play = function(name, repeat) {
-	console.info('Sound.play '+name);
 	if (!this.elements[name]) {
 		return false;
 	}
@@ -103,9 +92,9 @@ Sound.prototype.play = function(name, repeat) {
 		}
 	}
 	
-	if (this.loaded[name] === true) {
-		this.elements[name].play();
-	}
+	if (this.elements[name].currentTime != 0)
+		this.elements[name].currentTime = 0;
+	this.elements[name].play();
 };
 
 /**
@@ -116,11 +105,9 @@ Sound.prototype.stop = function(name) {
 		return false;
 	}
 	
-	if (this.loaded[name] === true) {
-		this.repetitions[name] = 0; // Stop programmed repetitions too	
-		this.elements[name].pause();
-		this.elements[name].currentTime = 0;
-	}
+	this.repetitions[name] = 0; // Stop programmed repetitions too	
+	this.elements[name].pause();
+	this.elements[name].currentTime = 0;
 };
 
 /**

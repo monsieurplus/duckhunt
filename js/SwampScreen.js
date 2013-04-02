@@ -134,6 +134,7 @@ SwampScreen.prototype.init = function() {
 	
 	// When a duck has finished dying, the dog comes to show the dead ducks
 	this.gui.duck1.addEventListener('deathEnd', function(e) {
+		game.sound.play('end_duck_round');
 		_this.gui.dog.queueAnimation({ name : 'found1duck', x : e.x, callback : function() {
 			_this.values.duck++;
 			if (_this.values.duck < 10) {
@@ -157,6 +158,7 @@ SwampScreen.prototype.init = function() {
 			return false;
 		}
 		
+		game.sound.play('blast');
 		_this.gui.flash.start();
 		_this.values.bullet--;
 		
@@ -271,7 +273,10 @@ SwampScreen.prototype.start = function() {
 SwampScreen.prototype.stop = function() {
 	var _this = this;
 	
-	var sunsetDuration = 2000; // Duration of the sunset (time when the duck flies away)
+	var sunsetDuration = 2000;
+	
+	// Ends duck flight timer (it can already be over, but the duck can also fly away if the player shot 3 bullets)
+	clearTimeout(_this.values.timer);
 	
 	if (_this.gui.duck1.action !== 'fly') {
 		return false;
@@ -293,6 +298,7 @@ SwampScreen.prototype.stop = function() {
 
 		_this.values.armed = false;
 		_this.gui.sky.color = '#64B0FF';
+		game.sound.play('laugh');
 		_this.gui.dog.queueAnimation({ name : 'laugh', callback : function() {
 			// Launch next duck of next round
 			if (_this.values.duck < 10) {
@@ -326,14 +332,16 @@ SwampScreen.prototype.endRound = function(callback) {
 		// Game Over display
 		this.gui.modal.type = 'game over';
 		this.gui.modal.display(3000);
+		game.sound.play('game_over');
 		
 		// Display laughing dog
 		setTimeout(function() {
-			_this.gui.dog.queueAnimation('laugh', function() {
+			game.sound.play('laugh');
+			_this.gui.dog.queueAnimation({ name : 'laugh', callback : function() {
 				// Back to the main screen
 				_this.remove();
 				MainScreen.insert();
-			});
+			}});
 		}, 3000);
 	}
 	else {

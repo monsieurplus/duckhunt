@@ -30,7 +30,7 @@
 				game.init({
 					'canvasId' : 'game-canvas',
 					'fpsId' : 'fps-counter',
-					'sound' : true
+					'sound' : (document.createElement("audio").canPlayType("audio/mpeg") !== '')
 				});
 
 				var tools = document.getElementById('tools');
