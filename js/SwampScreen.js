@@ -134,17 +134,24 @@ SwampScreen.prototype.init = function() {
 	
 	// When a duck has finished dying, the dog comes to show the dead ducks
 	this.gui.duck1.addEventListener('deathEnd', function(e) {
-		game.sound.play('end_duck_round');
-		_this.gui.dog.queueAnimation({ name : 'found1duck', x : e.x, callback : function() {
-			_this.values.duck++;
-			if (_this.values.duck < 10) {
-				_this.start();
-			}
-			else {
-				// Launch round ending
-				_this.endRound();
-			}
-		} });
+		// Sound of the duck touching the ground
+		game.sound.play('drop');
+		
+		// Dog picks up the duck
+		setTimeout( function() {
+			game.sound.play('end_duck_round');
+			_this.gui.dog.queueAnimation({ name : 'found1duck', x : e.x, callback : function() {
+				_this.values.duck++;
+				if (_this.values.duck < 10) {
+					_this.start();
+				}
+				else {
+					// Launch round ending
+					_this.endRound();
+				}
+			} });
+		}, 250);
+
 	});
 	
 	// Catch the game click event the shoot ducks
