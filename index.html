@@ -26,11 +26,13 @@
 		
 		<script type="text/javascript">
 			document.addEventListener('DOMContentLoaded', function() {
+				var audioTest = document.createElement('audio');
+				
 				game = new Game();
 				game.init({
 					'canvasId' : 'game-canvas',
 					'fpsId' : 'fps-counter',
-					'sound' : (document.createElement("audio").canPlayType("audio/mpeg") !== '')
+					'sound' : (audioTest && audioTest.canPlayType && audioTest.canPlayType("audio/mpeg") !== '')
 				});
 
 				var tools = document.getElementById('tools');

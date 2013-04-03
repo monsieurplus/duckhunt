@@ -14,7 +14,7 @@ What works
 
 What still has to be done
 -------------------------
-* Group all classes in a global object (
+* Group all classes in a global object
 * When the dog show the duck he picked up, it should not always be centered on the screen (it should be placed next where the duck felt)
 * Add fake CRT effect like the one made by Zachary Johnson : http://www.zachstronaut.com/posts/2012/08/17/webgl-fake-crt-html5.html (should be optionnal)
 * Pause mode (I still don't know how to do it...)
