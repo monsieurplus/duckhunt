@@ -135,6 +135,7 @@ SwampScreen.prototype.init = function() {
 	// When a duck has finished dying, the dog comes to show the dead ducks
 	this.gui.duck1.addEventListener('deathEnd', function(e) {
 		// Sound of the duck touching the ground
+		game.sound.stop('skeet_1');
 		game.sound.play('drop');
 		
 		// Dog picks up the duck
@@ -195,6 +196,11 @@ SwampScreen.prototype.init = function() {
 			
 			// Launch dying duck animation
 			_this.gui.duck1.die();
+			
+			// Duck fall sound
+			setTimeout(function() {
+				game.sound.play('skeet_1');
+			}, 500);
 		}
 		// If the duck is not hit and the player is out of ammos
 		else if (_this.values.bullet === 0) {
@@ -240,7 +246,9 @@ SwampScreen.prototype.start = function() {
 		this.gui.modal.display(3000);
 		
 		// Dog animation to begin a round
-		this.gui.dog.queueAnimation({ 'name' : 'walk' });
+		if (this.values.round === 1) {
+			this.gui.dog.queueAnimation({ 'name' : 'walk' });
+		}
 		this.gui.dog.queueAnimation({ 'name' : 'jump', 'callback' : function() {
 			// Barking sound
 			game.sound.play('bark', 2);
@@ -260,7 +268,9 @@ SwampScreen.prototype.start = function() {
 		} });
 		
 		// Play start round music
-		game.sound.play('start_round');
+		if (this.values.round === 1) {
+			game.sound.play('start_round');
+		}
 	}
 	else {
 		game.layerManager.lower('swamp.dog');
@@ -337,13 +347,14 @@ SwampScreen.prototype.endRound = function(callback) {
 	// Game Over detection
 	if (killed < this.values.goal) {
 		// Game Over display
+		game.sound.play('lose');
 		this.gui.modal.type = 'game over';
 		this.gui.modal.display(3000);
-		game.sound.play('game_over');
+		
 		
 		// Display laughing dog
 		setTimeout(function() {
-			game.sound.play('laugh');
+			game.sound.play('win');
 			_this.gui.dog.queueAnimation({ name : 'laugh', callback : function() {
 				// Back to the main screen
 				_this.remove();
@@ -355,8 +366,13 @@ SwampScreen.prototype.endRound = function(callback) {
 		var timer = 0;
 		
 		// Moving ducks on the left
-		var scheduleHit = function(hit, delay) {
+		var scheduleHit = function(hit, delay, sound) {
 			window.setTimeout(function() {
+				if (sound === true) {
+					game.sound.play('point');
+				}
+				
+				// Display ducks in a certain position
 				_this.values.hit = hit;
 				_this.changeHud();
 			}, delay);
@@ -383,9 +399,14 @@ SwampScreen.prototype.endRound = function(callback) {
 			}
 			
 			// Schedule HUD change
-			scheduleHit(newHit, timer);
+			scheduleHit(newHit, timer, true);
 			timer+=500;
 		}
+		
+		// Round won sound
+		setTimeout(function() {
+			game.sound.play('next_round');
+		}, timer);
 		
 		// Blinking killed ducks
 		for (var i=0; i<16; i++) {
@@ -401,6 +422,8 @@ SwampScreen.prototype.endRound = function(callback) {
 		// Perfect detection
 		if (killed === 10) {
 			setTimeout(function() {
+				// Display perfect modal
+				game.sound.play('high_score');
 				_this.gui.modal.type = 'perfect';
 				_this.gui.modal.perfect = _this.config[_this.values.round].points.perfect;
 				_this.gui.modal.display(3000);
