@@ -39,9 +39,24 @@
 				if (game.checkFullScreen() === true) {
 					var buttonFullScreen = document.createElement('button');
 					buttonFullScreen.innerHTML = 'FullScreen';
-					buttonFullScreen.addEventListener('click', function() { game.goFullScreen(); });
+					buttonFullScreen.addEventListener('click', function() { 
+						game.goFullScreen(); 
+					});
 					tools.appendChild(buttonFullScreen);
 				}
+				
+				var buttonMute = document.createElement('button');
+				buttonMute.innerHTML = game.sound.muted ? 'Unmute' : 'Mute';
+				buttonMute.addEventListener('click', function() {
+					if (game.sound.muted) {
+						game.sound.unmute();
+					}
+					else {
+						game.sound.mute();
+					}
+					buttonMute.innerHTML = game.sound.muted ? 'Unmute' : 'Mute';
+				});
+				tools.appendChild(buttonMute);
 			});
 		</script>
 		<style type="text/css">
@@ -53,6 +68,8 @@
 				left:0;
 				
 				height:100%;
+				
+				cursor:crosshair;
 				
 				/* avoid canvas orange|blue highlight when clicked in Android */
 				-webkit-tap-highlight-color: rgba(0,0,0,0);
